@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Layout, Button, theme } from "antd";
+import Logo from "./components/Logo";
+import MenuList from "./components/MenuList";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import ToggleThemeButton from "./components/ToggleThemeButton";
+
+const { Sider, Header } = Layout;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [darkTheme, setDarkTheme] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleTheme = () => {
+    setDarkTheme(!darkTheme);
+  };
+
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Layout>
+      <Sider
+        className="sidebar"
+        theme={darkTheme ? "dark" : "light"}
+        collapsed={collapsed}
+        collapsible
+        trigger={null}
+      >
+        <Logo />
+        <MenuList darkTheme={darkTheme} />
+        <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
+      </Sider>
+      <Layout>
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <Button
+            type="text"
+            className="toggle"
+            onClick={() => setCollapsed(!collapsed)}
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          ></Button>
+        </Header>
+      </Layout>
+    </Layout>
+  );
 }
 
-export default App
+export default App;
